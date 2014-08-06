@@ -2,7 +2,8 @@ var dgram = require('./dgramhndl.js');
 var twsrv = require('./twsrv.js');
 var master = require('./twmaster.js');
 
-var reqInterval = 10; // ms delay between requests
+var reqInterval = 6; // ms delay between requests
+var waitAfter = 6000; // ms to wait after all requests sent
 
 module.exports = {
 	fetchServers: fetchServers
@@ -23,6 +24,7 @@ function fetchServers(cb) {
 	});
 
 	var _finish = function() {
+		console.log("kbytes send/recv", dh.bytesSend/1024, dh.bytesRecv/1024);
 		dh.destroy(); // meh
 		cb(servers);
 	}
@@ -33,7 +35,7 @@ function fetchServers(cb) {
 			// wait a bit for responses and finish
 			setTimeout(function(){
 				_finish();	
-			}, 10000);
+			}, waitAfter);
 			return; // done
 		}
 		

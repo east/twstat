@@ -8,6 +8,8 @@ function DgramHandler() {
 	var self = this;
 	this.socket = dgram.createSocket("udp4");
 	this.handlers = [];
+	this.bytesRecv = 0;
+	this.bytesSend = 0;
 
 	var socket = this.socket;
 
@@ -31,6 +33,7 @@ DgramHandler.prototype.reset = function() {
 
 DgramHandler.prototype.sendto = function(addr, port, data, cb) {
 	this.handlers.push({addr: addr, port: port, cb: cb});
+	this.bytesSend += data.length;
 	this.socket.send(data, 0, data.length, port, addr);
 }
 
@@ -58,6 +61,7 @@ DgramHandler.prototype._getHandler = function(rInfo) {
 }
 
 DgramHandler.prototype._onMsg = function(msg, rInfo) {
+	this.bytesRecv += msg.length;
 	var h = this._getHandler(rInfo);
 
 	if (h == -1) {
