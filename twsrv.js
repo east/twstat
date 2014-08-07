@@ -290,9 +290,6 @@ function getInfo64(dgram, addr, cb)
 					throw "Invalid player offset: "+Offs+" should be "+packetId*24;
 				packetId++;
 
-
-				//infoObj.players = []; //TODO: why did I add this?
-
 				// players
 				var maxPl = Math.min(infoObj.numClients - Offs, 24);
 				for (var i = 0; i < maxPl; i++)
