@@ -75,8 +75,16 @@ function update() {
 
 
 // ajax
+//CORS middleware
+function allowCrossDomain(req, res) {
+	res.header('Access-Control-Allow-Origin', "*");
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+}
+
 app.get("/get/:plname/:plclan/", function(req, res) {
 	res.header("Content-Type", "application/json");
+	allowCrossDomain(req, res);
 
 	var name = req.params.plname == "matchall" ? "" : req.params.plname;
 	var clan = req.params.plclan == "matchall" ? "" : req.params.plclan;
@@ -123,7 +131,8 @@ app.get("/get/:plname/:plclan/", function(req, res) {
 
 app.get("/get/qzclan", function(req, res) {
 	res.header("Content-Type", "application/json");
-
+	allowCrossDomain(req, res);
+	
 	var obj = {};
 	var body;
 
