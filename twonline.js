@@ -137,7 +137,7 @@ app.get("/get/qzclan", function(req, res) {
 	var body;
 
 
-	var plInfo = findPlayers([{clan: "'qZ"}, {name: "'qZ |BlaGK|›", clan: "enjoy!"}]);
+	var plInfo = findPlayers([{clan: "'qZ"}, {clan: "QuintessenZ"}, {name: "'qZ |BlaGK|›", clan: "enjoy!"}]);
 
 	if (!plInfo.players.length)
 		obj.error = "Player not found"
