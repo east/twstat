@@ -62,6 +62,16 @@ function findPlayers(searchInfo) {
 	return list;
 }
 
+function getServer(ip, port) {
+	for (var i = 0; i < curList.length; i++) {
+		var srv = curList[i];
+		if (srv.address == ip && srv.port == port)
+			return srv;
+	}
+
+	return null;
+}
+
 function update() {
 	console.log("fetch servers...");
 
@@ -123,6 +133,31 @@ app.get("/get/:plname/:plclan/", function(req, res) {
 					addr: srv.address+":"+srv.port,
 				});	
 			}
+		}
+	}
+
+	res.status(200).send(JSON.stringify(obj));
+});
+
+app.get("/server/:ip/:port/", function(req, res) {
+	res.header("Content-Type", "application/json");
+	allowCrossDomain(req, res);
+
+	var ip = req.params.ip;
+	var port = req.params.port;
+
+	var obj = {};
+	var body;
+
+	if (!ip && !port)
+		obj.error = "Invalid request";
+	else {
+		var srv = getServer(ip, port);
+
+		if (!srv) {
+			obj.error = "Server not found";
+		} else {
+			obj = srv;
 		}
 	}
 
