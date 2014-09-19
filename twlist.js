@@ -42,7 +42,7 @@ function fetchServers(cb) {
 		var addr = addrs[curIndex];
 		var addrStr = addr.ip[0]+"."+addr.ip[1]+"."+addr.ip[2]+"."+addr.ip[3]+":"+addr.port;
 
-		//console.log("get info from", addrStr);
+		console.log("get info from", "["+curIndex+"/"+addrs.length+"]", addrStr);
 		
 		twsrv.getInfoSmart(dh, addrStr, function(status, info) {
 			if (info == undefined) {

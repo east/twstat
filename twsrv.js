@@ -71,20 +71,24 @@ function getAddrInfo(addr, cb)
 		// do reverse lookup
 		address = a;
 
-		dns.reverse(a, function(err, domains) {
+		var addrInfo = {};
+		
+		addrInfo.address = address;
+		addrInfo.domain = "<not resolved>";
+		addrInfo.port = port;
+		
+		/*dns.reverse(a, function(err, domains) {
 			if (err)
 				domain = "<not found>";
 			else
 				domain = domains[0];
 
-			var addrInfo = {
-				address: address,
-				domain: domain,
-				port: port
-			};
+			addrInfo.address = address;
+			addrInfo.domain = domain;
+			addrInfo.port = port;
+		});*/
 
-			cb(addrInfo);
-		});
+		cb(addrInfo);
 	}
 	else
 	{
@@ -198,6 +202,12 @@ function getInfo64(dgram, addr, cb)
 {
 	// parse address
 	getAddrInfo(addr, function(addrInfo) {
+
+		if (!dgram.online) {
+			cb("dgram handler down", null);
+			return;
+		}
+
 		// send request
 		var req = new Buffer(15, 'ascii');
 
@@ -330,6 +340,11 @@ function getInfo06(dgram, addr, cb)
 {
 	// parse address
 	getAddrInfo(addr, function(addrInfo) {
+	
+	if (!dgram.online) {
+		cb("dgram handler down", null);
+		return;
+	}
 
 	if (!addrInfo)
 	{

@@ -6,6 +6,7 @@ module.exports = {
 
 function DgramHandler() {
 	var self = this;
+	this.online = true;
 	this.socket = dgram.createSocket("udp4");
 	this.handlers = [];
 	this.bytesRecv = 0;
@@ -24,6 +25,7 @@ function DgramHandler() {
 
 DgramHandler.prototype.destroy = function() {
 	this.socket.close();
+	this.online = false;
 }
 
 DgramHandler.prototype.reset = function() {
