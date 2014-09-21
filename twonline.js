@@ -62,14 +62,15 @@ function findPlayers(searchInfo) {
 	return list;
 }
 
-function getServer(ip, port) {
+function getServers(ip, port) {
+	var list = [];
 	for (var i = 0; i < curList.length; i++) {
 		var srv = curList[i];
-		if (srv.address == ip && srv.port == port)
-			return srv;
+		if ((!ip || srv.address == ip) && (!port || srv.port == port))
+			list.push(srv);
 	}
 
-	return null;
+	return list;
 }
 
 function update() {
@@ -152,12 +153,12 @@ app.get("/server/:ip/:port/", function(req, res) {
 	if (!ip && !port)
 		obj.error = "Invalid request";
 	else {
-		var srv = getServer(ip, port);
+		var srvs = getServers(ip, port);
 
-		if (!srv) {
+		if (srvs.length == 0) {
 			obj.error = "Server not found";
 		} else {
-			obj = srv;
+			obj = srvs[0];
 		}
 	}
 
@@ -200,6 +201,50 @@ app.get("/get/qzclan", function(req, res) {
 				addr: srv.address+":"+srv.port,
 			});	
 		}
+	}
+
+	res.status(200).send(JSON.stringify(obj));
+});
+
+app.get("/serversof/:ip/", function(req, res) {
+	res.header("Content-Type", "application/json");
+	allowCrossDomain(req, res);
+
+	var ip = req.params.ip;
+
+	var obj = {};
+	var body;
+
+	if (!ip)
+		obj.error = "Invalid request";
+	else {
+		var obj = getServers(ip, null);
+
+		if (!obj)
+			obj.error = "Server not found";
+	}
+
+	res.status(200).send(JSON.stringify(obj));
+});
+
+app.get("/servernamesof/:ip/", function(req, res) {
+	res.header("Content-Type", "application/json");
+	allowCrossDomain(req, res);
+
+	var ip = req.params.ip;
+
+	var obj = {};
+	var body;
+
+	if (!ip)
+		obj.error = "Invalid request";
+	else {
+		var srvs = getServers(ip, null);
+
+		var nameList = [];
+		srvs.forEach(function(e) { nameList.push(e.name) });
+
+		obj = nameList;
 	}
 
 	res.status(200).send(JSON.stringify(obj));
